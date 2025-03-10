@@ -9,7 +9,12 @@ import {
     ERROR_READING_DIRECTORY 
 } from '../constants/error';
 
-
+/**
+ * Checks if a given file or directory path exists.
+ *
+ * @param {string} filePath - The path to check.
+ * @returns {Promise<boolean>} - A promise that resolves to true if the path exists, otherwise false.
+ */
 export async function pathExists(filePath: string): Promise<boolean> {
     try {
         await fs.access(filePath);
@@ -19,6 +24,12 @@ export async function pathExists(filePath: string): Promise<boolean> {
     }
 }
 
+/**
+ * Determines if the given path is a directory.
+ *
+ * @param {string} filePath - The path to check.
+ * @returns {Promise<boolean>} - A promise that resolves to true if the path is a directory, otherwise false.
+ */
 export async function isDirectory(filePath: string): Promise<boolean> {
     try {
         const stat = await fs.stat(filePath);
@@ -28,6 +39,18 @@ export async function isDirectory(filePath: string): Promise<boolean> {
     }
 }
 
+/**
+ * Retrieves the contents of a directory.
+ *
+ * This function checks whether the provided directory path exists and is indeed a directory.
+ * It then reads the directory's contents and returns an array of DirectoryItem objects containing
+ * details for each file or subdirectory. If details for an item cannot be retrieved, an error message
+ * is included in that item's object.
+ *
+ * @param {string} dirPath - The directory path to list.
+ * @returns {Promise<DirectoryItem[]>} - A promise that resolves to an array of directory items.
+ * @throws Will throw an error if the directory does not exist, is not a directory, or if there's an error reading the directory.
+ */
 export async function getDirectoryContents(dirPath: string): Promise<DirectoryItem[]> {
     const doesPathExist = await pathExists(dirPath);
     if (!doesPathExist) {
@@ -70,6 +93,16 @@ export async function getDirectoryContents(dirPath: string): Promise<DirectoryIt
     }
 }
 
+/**
+ * Retrieves detailed information about a file or directory.
+ *
+ * This function checks if the specified file or directory exists. If it does, it returns an object containing
+ * information such as name, type, size, creation date, and modification date.
+ *
+ * @param {string} filePath - The path to the file or directory.
+ * @returns {Promise<FileInfo>} - A promise that resolves to an object containing the file or directory details.
+ * @throws Will throw an error if the file or directory does not exist or if there is an error retrieving its details.
+ */
 export async function getFileDetails(filePath: string): Promise<FileInfo> {
     const doesPathExist = await pathExists(filePath);
     if (!doesPathExist) {
