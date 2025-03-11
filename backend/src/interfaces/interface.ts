@@ -2,8 +2,9 @@ export interface FileInfo {
     name: string;
     type: string;
     size: number| null;
-    createdAt: Date;
-    modifiedAt: Date;
+    permissions?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
 }
 
 export interface FileError{

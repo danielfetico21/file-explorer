@@ -18,8 +18,8 @@ import {
  * @returns {Promise<void>} 
  * 
  * @example
- * // GET /files?path=/home/user/documents
- * // Response: { "type": "success", "contents": [...] }
+ * GET /files?path=/home/user/documents
+ * Response: { "type": "success", "contents": [...] }
  * 
  * @throws Will respond with 400 if path is not provided
  * @throws Will respond with 500 if directory contents cannot be retrieved
@@ -55,8 +55,8 @@ export async function getFiles(req: Request, res: Response): Promise<void> {
  * @returns {Promise<void>}
  * 
  * @example
- * // GET /file?path=/home/user/documents/file.txt
- * // Response: { "type": "success", "details": {...} }
+ * GET /file?path=/home/user/documents/file.txt
+ * Response: { "type": "success", "details": {...} }
  * 
  * @throws Will respond with 400 if path is not provided
  * @throws Will respond with 500 if file details cannot be retrieved
@@ -91,8 +91,8 @@ export async function getFile(req: Request, res: Response): Promise<void> {
  * @returns {Promise<void>}
  * 
  * @example
- * // GET /platform
- * // Response: { "type": "success", "platform": "Windows" }
+ * GET /platform
+ * Response: { "type": "success", "platform": "Windows" }
  */
 export async function getPlatform(req: Request, res: Response): Promise<void> {
     let platformName: string = process.platform === 'win32' ? 'Windows' : process.platform === 'darwin' ? 'MacOS' : process.platform === 'linux' ? 'Linux' : process.platform;

@@ -75,8 +75,6 @@ export async function getDirectoryContents(dirPath: string): Promise<DirectoryIt
               name: fileName,
               type: stats.isDirectory() ? 'directory' : 'file',
               size: stats.isFile() ? stats.size : null,
-              createdAt: stats.birthtime,
-              modifiedAt: stats.mtime,
             } as DirectoryItem;
           } catch (error: any) {
             return {
@@ -111,10 +109,13 @@ export async function getFileDetails(filePath: string): Promise<FileInfo> {
 
     try {
         const stats = await fs.stat(filePath)
+        const mode = stats.mode;
+        const permissions = getPermissionsFormated(mode);
         const fileDetails = {
             name: path.basename(filePath),
             type: stats.isDirectory() ? 'directory' : 'file',
             size: stats.size,
+            permissions: permissions,
             createdAt: stats.birthtime,
             modifiedAt: stats.mtime
         }
@@ -123,4 +124,50 @@ export async function getFileDetails(filePath: string): Promise<FileInfo> {
     } catch (error: any) {
         throw new Error(error.message);
     }
+}
+
+/**
+ * Converts a numeric file mode into a human-readable permission string.
+ * 
+ * @param mode - The numeric file permission mode (typically from fs.Stats)
+ * @returns A formatted string representation of the permissions in both symbolic 
+ *          notation (e.g., "rwxr-xr--") and octal notation (e.g., "754")
+ * 
+ * @example
+ * Returns "rwxr-xr-- (754)" for mode 0o754
+ * getPermissionsFormated(0o754);
+ * 
+ * @example
+ * Returns "rw-r--r-- (644)" for mode 0o644
+ * getPermissionsFormated(0o644);
+ * 
+ * @remarks
+ * - The function extracts only the permission bits (0o777) from the provided mode
+ * - Permissions are padded with '---' if the octal representation is less than 3 digits
+ * - Each octal digit is mapped to its symbolic representation (r=read, w=write, x=execute)
+ */
+function getPermissionsFormated(mode: number): string {
+  const octalPermission = (mode & 0o777).toString(8);
+  
+  const permissionMap: {[key: string]: string} = {
+      '0': '---',
+      '1': '--x',
+      '2': '-w-',
+      '3': '-wx',
+      '4': 'r--',
+      '5': 'r-x',
+      '6': 'rw-',
+      '7': 'rwx'
+  };
+  
+  let readable = '';
+  for (let i = 0; i < octalPermission.length; i++) {
+      readable += permissionMap[octalPermission[i]] || '---';
+  }
+  
+  while (readable.length < 9) {
+      readable = '---' + readable;
+  }
+  
+  return `${readable} (${octalPermission})`;
 }
