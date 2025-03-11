@@ -2,6 +2,7 @@ export interface FileInfo {
     name: string;
     type: 'file' | 'directory';
     size: number | null;
+    permissions: string;
     createdAt: Date;
     modifiedAt: Date;
 }
@@ -15,6 +16,7 @@ export interface DirectoryItem {
     error?: string
     details?: FileInfo
 }
+
 
 export interface PlatformInfo {
     platfrom: string
