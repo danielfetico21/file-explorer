@@ -23,14 +23,12 @@ const FileGrid: React.FC<FileGridProps> = ({
   loadingFileId,
   selectedFile,
 }) => {
-  // Track whether the currently selected file should be expanded
   const [isDetailsExpanded, setIsDetailsExpanded] = useState<boolean>(false);
 
   const getFullPath = (fileName: string): string => {
     return currentPath === "/" ? fileName : `${currentPath}/${fileName}`;
   };
 
-  // Reset expanded state when selected file changes
   useEffect(() => {
     if (selectedFilePath && selectedFile && !loadingFileId) {
       setIsDetailsExpanded(true);
@@ -40,14 +38,10 @@ const FileGrid: React.FC<FileGridProps> = ({
   const handleFileClick = (file: DirectoryItem) => {
     const fullPath = getFullPath(file.name);
 
-    // If clicking the same file that's already selected
     if (selectedFilePath === fullPath) {
-      // Toggle expanded state
       setIsDetailsExpanded(!isDetailsExpanded);
     } else {
-      // Clicking a different file
       onFileClick(file);
-      // Expanded state will be set by useEffect
     }
   };
 
@@ -137,7 +131,6 @@ const FileGrid: React.FC<FileGridProps> = ({
                         ))}
                     </button>
 
-                    {/* Expandable file details section */}
                     {shouldShowExpanded && selectedFile && (
                       <div className="px-4 py-3 bg-gray-800/80 border-t border-gray-700 text-sm animate-fadeIn">
                         <div className="grid grid-cols-1 gap-3">
