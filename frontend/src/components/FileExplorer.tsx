@@ -89,7 +89,7 @@ const FileExplorer = () => {
   const files = items.filter((item) => item.type === "file");
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-full">
       <Breadcrumbs
         currentPath={currentPath}
         onBreadcrumbClick={(path) => setCurrentPath(path)}
