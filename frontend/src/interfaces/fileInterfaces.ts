@@ -1,14 +1,36 @@
-export interface FileItem {
+export interface FileInfo {
+    name: string;
+    type: 'file' | 'directory';
+    size: number | null;
+    createdAt: Date;
+    modifiedAt: Date;
+}
+
+export interface DirectoryItem {
     name: string
-    path: string
-    type : 'file' | 'directory'
+    type: 'file' | 'directory'
     size?: number | null
     modifiedAt: Date
     createdAt: Date
-    extension?: string
+    error?: string
+    details?: FileInfo
 }
 
-
 export interface PlatformInfo {
- platfrom: string
+    platfrom: string
+}
+
+export interface GetAllFilesResponse {
+    type: "success";
+    contents: DirectoryItem[];
+}
+
+export interface GetFileResponse {
+    type: "success";
+    details: FileInfo;
+}
+
+export interface GetPlatformResponse {
+    type: "success";
+    platform: string;
 }
