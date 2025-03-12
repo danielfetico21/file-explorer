@@ -10,6 +10,7 @@ interface FileItemProps {
   isFileLoading: boolean;
   selectedFile: FileInfo | null;
   onClick: () => void;
+  isFocused?: boolean;
 }
 
 const FileItem: React.FC<FileItemProps> = ({
@@ -18,11 +19,15 @@ const FileItem: React.FC<FileItemProps> = ({
   isFileLoading,
   selectedFile,
   onClick,
+  isFocused = false,
+  ...rest
 }) => {
-  const shouldShowExpanded = isDetailsExpanded && !isFileLoading;
+  const isThisFileSelected = selectedFile?.name === file.name;
+  const shouldShowExpanded =
+    isThisFileSelected && isDetailsExpanded && !isFileLoading;
 
   return (
-    <div className="relative">
+    <div className="relative" {...rest}>
       {isFileLoading && (
         <div className="absolute inset-0 overflow-hidden rounded-lg">
           <div className="h-full bg-blue-500/20 animate-pulse"></div>
@@ -32,12 +37,19 @@ const FileItem: React.FC<FileItemProps> = ({
       <div
         className={cn(
           "rounded-lg overflow-hidden transition-all duration-200",
-          shouldShowExpanded ? "bg-gray-900" : ""
+          shouldShowExpanded ? "bg-gray-900" : "",
+          isFocused ? "ring-2 ring-blue-500" : ""
         )}
       >
         <button
           onClick={onClick}
-          className="flex items-center gap-3 px-3 py-2 text-left transition-colors duration-150 w-full !bg-gray-900/90 hover:!bg-gray-800/90 !border-none !outline-none"
+          aria-selected={isThisFileSelected}
+          aria-expanded={isDetailsExpanded}
+          aria-busy={isFileLoading}
+          className={cn(
+            "flex items-center gap-3 px-3 py-2 text-left transition-colors duration-150 w-full !bg-gray-900/90 hover:!bg-gray-800/90 !border-none !outline-none",
+            isFocused ? "!bg-gray-800/90" : ""
+          )}
         >
           <FileIcon
             type={file.type}

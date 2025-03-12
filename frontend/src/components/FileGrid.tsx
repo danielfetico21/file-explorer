@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FileInfo } from "../interfaces/fileInterfaces";
 import { useSelector, useDispatch } from "react-redux";
 import { selectFile, toggleFileExpansion } from "../store/fileSlice";
@@ -27,7 +27,8 @@ const FileGrid: React.FC<FileGridProps> = ({ onFileClick, onBackClick }) => {
     globalError,
     loadingFileId,
   } = useSelector((state: RootState) => state.files);
-
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const gridRef = useRef<HTMLDivElement>(null);
   const selectedFile = selectedFilePath ? fileDetails[selectedFilePath] : null;
 
   const getFullPath = (fileName: string): string => {
@@ -50,11 +51,66 @@ const FileGrid: React.FC<FileGridProps> = ({ onFileClick, onBackClick }) => {
     onFileClick(file);
   };
 
+  useEffect(() => {
+    setFocusedIndex(files && files.length > 0 ? 0 : -1);
+  }, [files, currentPath]);
+
+  useEffect(() => {
+    if (gridRef.current) {
+      gridRef.current.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (focusedIndex >= 0 && gridRef.current) {
+      const focusedElement = gridRef.current.querySelector(
+        `[data-index="${focusedIndex}"]`
+      ) as HTMLElement;
+      if (focusedElement) {
+        focusedElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }, [focusedIndex]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!files || files.length === 0) return;
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        setFocusedIndex((prevIndex) =>
+          Math.min(prevIndex + 1, files.length - 1)
+        );
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        setFocusedIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+        break;
+      case "Enter":
+        event.preventDefault();
+        if (focusedIndex >= 0 && focusedIndex < files.length) {
+          const file = files[focusedIndex];
+          handleFileClick(file);
+        }
+        break;
+      case "Escape":
+        event.preventDefault();
+        if (currentPath !== "/") {
+          onBackClick();
+        }
+    }
+  };
+
   return (
     <div className="w-full h-full flex flex-col">
       <FileHeader title="Files" />
 
-      <div className="flex-1 overflow-y-auto">
+      <div
+        className="flex-1 overflow-y-auto px-2"
+        ref={gridRef}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+      >
         <div className="grid grid-cols-1 gap-2 py-4">
           {currentPath !== "/" && <BackButton onBackClick={onBackClick} />}
 
@@ -65,7 +121,7 @@ const FileGrid: React.FC<FileGridProps> = ({ onFileClick, onBackClick }) => {
           ) : !files || files.length === 0 ? (
             <EmptyState />
           ) : (
-            files.map((file) => {
+            files.map((file, index) => {
               const fullPath = getFullPath(file.name);
               return (
                 <FileItem
@@ -75,6 +131,8 @@ const FileGrid: React.FC<FileGridProps> = ({ onFileClick, onBackClick }) => {
                   isFileLoading={loadingFileId === file.name}
                   selectedFile={selectedFile}
                   onClick={() => handleFileClick(file)}
+                  isFocused={index === focusedIndex}
+                  data-index={index}
                 />
               );
             })
