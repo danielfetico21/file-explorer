@@ -1,36 +1,56 @@
+
 # File Explorer Application
 
-This repository contains the File Explorer Application, which is split into two main parts:
+This repository contains a **File Explorer Application** split into two major parts:
 
-- **Backend:** A REST API built with Node.js, TypeScript, and Express for navigating the file system.
-- **Frontend:** A client application (e.g., React or Angular) that will interact with the backend to display file and directory details.
+- **Backend**: A REST API (Node.js, TypeScript, Express) for navigating the file system.
+- **Frontend**: A client application React that displays file and directory details by consuming the backend API.
+
+---
 
 ## Repository Structure
 
 file-explorer/
-├── backend/         # Contains the backend API code
- │   └── README.md    # Backend documentation
-├── frontend/        # Contains the frontend application (to be implemented)
- │   └── README.md    # Frontend documentation
-├── docker-compose.yml  # Docker Compose file to run both backend and frontend together
-└── README.md        # This file
+
+├── backend/               # Backend API code
+
+│   └── README.md          # Backend documentation
+
+├── frontend/              # Frontend application (currently a placeholder)
+
+│   └── README.md          # Frontend documentation
+
+├── docker-compose.yml      # Docker Compose file to run backend & frontend
+
+└── README.md              # This file (main repo documentation)
 
 ## Getting Started
 
 ### Using Docker Compose
 
-A `docker-compose.yml` file is provided to build and run the services. Currently, it runs the backend service, and a placeholder for the frontend is included for future expansion.
-
-To build and run all services:
+A `docker-compose.yml` file is provided to build and run both services. At present, it runs the **backend** and includes a placeholder for the **frontend**:
 
 ```bash
 docker-compose up -d
 ```
 
-* **Backend:** Accessible on [http://localhost:3000](http://localhost:3000/)
+Once built:
+
+* **Backend:** Accessible at [http://localhost:3000](http://localhost:3000/)
 * **Frontend:** Will be accessible on its designated port once implemented.
 
 ### Manual Setup
 
-* **Backend:** See [backend/README.md](https://./backend/README.md) for instructions.
-* **Frontend:** See [frontend/README.md](https://./frontend/README.md) for details (currently a placeholder).
+* **Backend** : See [backend/README.md](https://chatgpt.com/c/backend/README.md) for detailed instructions.
+* **Frontend** : See [frontend/README.md](https://chatgpt.com/c/frontend/README.md) for details (currently a placeholder).
+
+---
+
+## Keyboard Navigation
+
+> **Note** : You must press Tab to focus the file grid before using these keys.
+
+* **ArrowDown** : Move selection down
+* **ArrowUp** : Move selection up
+* **Enter** : Open a directory or show file info
+* **Escape** : Go back one level

@@ -1,54 +1,105 @@
-# React + TypeScript + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based frontend application for our file explorer. This README describes how to install dependencies, run the development server, build for production, and run in Docker.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Node.js** (v16 or higher recommended)
+- **npm** or **yarn**
 
-## Expanding the ESLint configuration
+*(If you’re only running via Docker, you don’t strictly need Node installed locally.)*
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Installation
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. **Navigate** to the frontend folder:
+
+   ```bash
+   cd frontend
+   ```
+2. **Install** the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+   or
+
+   ```bash
+   yarn
+   ```
+3. Make sure you set any **environment variables** if needed (e.g., `VITE_API_URL`).
+
+## Development
+
+- **Start** the dev server (with hot reload):
+
+  ```bash
+  npm run dev
+  ```
+
+  or
+
+  ```bash
+  yarn dev
+  ```
+- Open the link shown in your terminal—often [http://localhost:5173](http://localhost:5173)—in your browser.
+
+## Production Build
+
+1. **Build** the production bundle:
+
+   ```bash
+   npm run build
+   ```
+2. **Serve** the production files locally (optional):
+
+   ```bash
+   npm install -g serve
+   serve -s dist
+   ```
+
+   Then open [http://localhost:5000](http://localhost:5000).
+
+## Docker
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+EXPOSE 5000
+CMD ["npx", "serve", "-s", "dist", "-l", "5000"]
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Build & Run
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+docker build -t file-explorer-frontend .
+docker run -p 5000:5000 file-explorer-frontend
 ```
+
+Open [http://localhost:5000](http://localhost:5000).
+
+## Folder Structure
+
+```
+frontend/
+  ├── public/
+  ├── src/
+  ├── package.json
+  ├── tsconfig.json
+  ├── Dockerfile
+  └── ...
+```
+
+
+## Keyboard Navigation
+
+> **Note:** You must press `<kbd>`Tab`</kbd>` to focus on the file grid before using these keys.
+
+- **ArrowDown**: Move the selection down
+- **ArrowUp**: Move the selection up
+- **Enter**: Open a directory or show file info
+- **Escape**: Go back
