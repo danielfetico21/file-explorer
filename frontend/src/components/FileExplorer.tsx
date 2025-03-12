@@ -1,21 +1,29 @@
-import { useEffect, useState } from "react";
-import { DirectoryItem, FileInfo } from "../interfaces/fileInterfaces";
+import { useEffect } from "react";
+import { DirectoryItem } from "../interfaces/fileInterfaces";
 import { getAllFiles, getFile } from "../api/api";
-import DirectorySidebar from "./DirectorySidebar";
+import { useDispatch, useSelector } from "react-redux";
 import FileGrid from "./FileGrid";
 import Breadcrumbs from "./Breadcrumbs";
+import {
+  setFiles,
+  setCurrentPath,
+  setLoadingState,
+  setFileDetails,
+  selectFile,
+} from "../store/fileSlice";
+import { RootState } from "../store/store";
+import FileTitle from "./FileTitle";
 
-const FileExplorer = () => {
-  const [currentPath, setCurrentPath] = useState<string>("/");
-  const [items, setItems] = useState<DirectoryItem[]>([]);
-  const [selectedFile, setSelectedFile] = useState<FileInfo | null>(null);
-  const [isDirectoryLoading, setIsDirectoryLoading] = useState<boolean>(false);
-  const [isFileLoading, setIsFileLoading] = useState<boolean>(false);
-  const [loadingFileId, setLoadingFileId] = useState<string | null>(null);
+const FileExplorer: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const { currentPath, loadingFileId, selectedFilePath } = useSelector(
+    (state: RootState) => state.files
+  );
 
   useEffect(() => {
     const fetchDirectoryContents = async () => {
-      setIsDirectoryLoading(true);
+      dispatch(setLoadingState({ isLoading: true }));
 
       const startTime = Date.now();
 
@@ -29,32 +37,34 @@ const FileExplorer = () => {
           );
         }
 
-        setItems(data);
+        dispatch(setFiles(data));
       } catch (error) {
         console.error("Error fetching files", error);
       } finally {
-        setIsDirectoryLoading(false);
+        dispatch(setLoadingState({ isLoading: false }));
       }
     };
 
     fetchDirectoryContents();
-  }, [currentPath]);
+  }, [currentPath, dispatch]);
 
   const handleItemClick = async (item: DirectoryItem) => {
+    const fullPath =
+      currentPath === "/" ? `/${item.name}` : `${currentPath}/${item.name}`;
+
     if (item.type === "file") {
-      if (selectedFile?.name === item.name && !isFileLoading) {
+      if (selectedFilePath === fullPath && !loadingFileId) {
         return;
       }
 
-      setIsFileLoading(true);
-      setLoadingFileId(item.name);
+      // Set loading state for file
+      dispatch(selectFile(fullPath));
+      dispatch(setLoadingState({ isLoading: true, fileId: item.name }));
 
       const startTime = Date.now();
 
       try {
-        const details = await getFile(
-          currentPath === "/" ? `/${item.name}` : `${currentPath}/${item.name}`
-        );
+        const details = await getFile(fullPath);
 
         const elapsedTime = Date.now() - startTime;
         if (elapsedTime < 500) {
@@ -63,57 +73,38 @@ const FileExplorer = () => {
           );
         }
 
-        setSelectedFile(details);
+        dispatch(setFileDetails({ path: fullPath, details }));
       } catch (error) {
         console.error("Error fetching file details", error);
       } finally {
-        setIsFileLoading(false);
-        setLoadingFileId(null);
+        dispatch(setLoadingState({ isLoading: false, fileId: null }));
       }
     } else {
-      setCurrentPath(
-        currentPath === "/" ? `/${item.name}` : `${currentPath}/${item.name}`
-      );
-      setSelectedFile(null);
+      dispatch(setCurrentPath(fullPath));
+      dispatch(selectFile(""));
     }
   };
 
   const handleBackClick = () => {
     if (currentPath === "/") return;
     const parentPath = currentPath.split("/").slice(0, -1).join("/") || "/";
-    setCurrentPath(parentPath);
-    setSelectedFile(null);
+    dispatch(setCurrentPath(parentPath));
+    dispatch(selectFile(""));
   };
 
-  const directories = items.filter((item) => item.type === "directory");
-  const files = items.filter((item) => item.type === "file");
+  const handleBreadcrumbClick = (path: string) => {
+    dispatch(setCurrentPath(path));
+  };
 
   return (
     <div className="flex flex-col h-full">
+      <FileTitle />
       <Breadcrumbs
         currentPath={currentPath}
-        onBreadcrumbClick={(path) => setCurrentPath(path)}
+        onBreadcrumbClick={(path) => handleBreadcrumbClick(path)}
       />
       <div className="flex flex-1 overflow-hidden">
-        <DirectorySidebar
-          directories={directories}
-          currentPath={currentPath}
-          onDirectoryClick={handleItemClick}
-          onBackClick={handleBackClick}
-          selectedDirectoryPath={selectedFile?.name}
-          isLoading={isDirectoryLoading}
-        />
-        <div className="relative flex-1 overflow-hidden">
-          <FileGrid
-            files={files}
-            currentPath={currentPath}
-            onFileClick={handleItemClick}
-            selectedFilePath={selectedFile?.name}
-            isLoading={isFileLoading}
-            loadingFileId={loadingFileId}
-            selectedFile={selectedFile}
-          />
-        </div>
+        <FileGrid onFileClick={handleItemClick} onBackClick={handleBackClick} />
       </div>
     </div>
   );
