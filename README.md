@@ -37,7 +37,7 @@ docker-compose up -d
 Once built:
 
 * **Backend:** Accessible at [http://localhost:3000](http://localhost:3000/)
-* **Frontend:** Will be accessible on its designated port once implemented.
+* **Frontend:** Accessible at [http://localhost:](http://localhost:3000/)8080
 
 ### Manual Setup
 
