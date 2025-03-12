@@ -8,7 +8,7 @@ import LoadingFilesSkeleton from "./SmallComponents/LoadingFilesSkeleton";
 import EmptyState from "./SmallComponents/EmptyState";
 import FileItem from "./SmallComponents/FileItem";
 import FileHeader from "./SmallComponents/FileHeader";
-import FileError from "./SmallComponents/FIleError";
+import FileError from "./SmallComponents/FileError";
 
 interface FileGridProps {
   onFileClick: (file: FileInfo) => void;
