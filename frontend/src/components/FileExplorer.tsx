@@ -126,13 +126,13 @@ const FileExplorer: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full max-w-4xl w-full  bg-gray-900/90 p-8">
       <FileTitle />
       <Breadcrumbs
         currentPath={currentPath}
         onBreadcrumbClick={(path) => handleBreadcrumbClick(path)}
       />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden w-full">
         <FileGrid onFileClick={handleItemClick} onBackClick={handleBackClick} />
       </div>
     </div>
