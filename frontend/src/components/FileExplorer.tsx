@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { DirectoryItem } from "../interfaces/fileInterfaces";
 import { getAllFiles, getFile } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import FileGrid from "./FileGrid";
@@ -10,9 +9,12 @@ import {
   setLoadingState,
   setFileDetails,
   selectFile,
+  setGlobalError,
 } from "../store/fileSlice";
 import { RootState } from "../store/store";
 import FileTitle from "./FileTitle";
+import { FileInfo } from "../interfaces/fileInterfaces";
+import handleError from "../utils/error";
 
 const FileExplorer: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,21 +27,20 @@ const FileExplorer: React.FC = () => {
     const fetchDirectoryContents = async () => {
       dispatch(setLoadingState({ isLoading: true }));
 
-      const startTime = Date.now();
-
       try {
         const data = await getAllFiles(currentPath);
 
-        const elapsedTime = Date.now() - startTime;
-        if (elapsedTime < 500) {
-          await new Promise((resolve) =>
-            setTimeout(resolve, 500 - elapsedTime)
-          );
-        }
-
-        dispatch(setFiles(data));
+        dispatch(setFiles(data.contents));
+        dispatch(setGlobalError(null));
       } catch (error) {
-        console.error("Error fetching files", error);
+        const fileError = handleError(error);
+        dispatch(
+          setGlobalError({
+            type: "error",
+            error: fileError?.error,
+            details: fileError?.details,
+          })
+        );
       } finally {
         dispatch(setLoadingState({ isLoading: false }));
       }
@@ -48,41 +49,69 @@ const FileExplorer: React.FC = () => {
     fetchDirectoryContents();
   }, [currentPath, dispatch]);
 
-  const handleItemClick = async (item: DirectoryItem) => {
-    const fullPath =
-      currentPath === "/" ? `/${item.name}` : `${currentPath}/${item.name}`;
+  const handleItemClick = async (item: FileInfo) => {
+    const fullPath = buildFullPath(currentPath, item.name);
 
     if (item.type === "file") {
-      if (selectedFilePath === fullPath && !loadingFileId) {
-        return;
-      }
-
-      // Set loading state for file
-      dispatch(selectFile(fullPath));
-      dispatch(setLoadingState({ isLoading: true, fileId: item.name }));
-
-      const startTime = Date.now();
-
-      try {
-        const details = await getFile(fullPath);
-
-        const elapsedTime = Date.now() - startTime;
-        if (elapsedTime < 500) {
-          await new Promise((resolve) =>
-            setTimeout(resolve, 500 - elapsedTime)
-          );
-        }
-
-        dispatch(setFileDetails({ path: fullPath, details }));
-      } catch (error) {
-        console.error("Error fetching file details", error);
-      } finally {
-        dispatch(setLoadingState({ isLoading: false, fileId: null }));
-      }
+      await handleFileClick(item, fullPath);
     } else {
-      dispatch(setCurrentPath(fullPath));
-      dispatch(selectFile(""));
+      handleDirectoryClick(fullPath);
     }
+  };
+
+  const handleDirectoryClick = (fullPath: string) => {
+    dispatch(setCurrentPath(fullPath));
+    dispatch(selectFile(""));
+  };
+
+  const buildFullPath = (currentPath: string, itemName: string): string => {
+    return currentPath === "/" ? `/${itemName}` : `${currentPath}/${itemName}`;
+  };
+
+  const handleFileClick = async (item: FileInfo, fullPath: string) => {
+    if (selectedFilePath === fullPath && !loadingFileId) {
+      return;
+    }
+
+    dispatch(selectFile(fullPath));
+    dispatch(setLoadingState({ isLoading: true, fileId: item.name }));
+
+    try {
+      const startTime = Date.now();
+      const fileDetails = await getFile(fullPath);
+      await ensureMinimumLoadingTime(startTime);
+
+      dispatch(setFileDetails({ path: fullPath, details: fileDetails }));
+      dispatch(setGlobalError(null));
+    } catch (error) {
+      handleFileError(error);
+    } finally {
+      // Resetăm starea de încărcare indiferent de rezultat
+      dispatch(setLoadingState({ isLoading: false, fileId: null }));
+    }
+  };
+
+  const ensureMinimumLoadingTime = async (
+    startTime: number,
+    minimumMs: number = 1000
+  ) => {
+    const elapsedTime = Date.now() - startTime;
+    if (elapsedTime < minimumMs) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, minimumMs - elapsedTime)
+      );
+    }
+  };
+
+  const handleFileError = (error: unknown) => {
+    const fileError = handleError(error);
+    dispatch(
+      setGlobalError({
+        type: "error",
+        error: fileError?.error,
+        details: fileError?.details,
+      })
+    );
   };
 
   const handleBackClick = () => {

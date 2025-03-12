@@ -1,19 +1,33 @@
 import api from "../config/axiosConfig";
-import { DirectoryItem, FileInfo, GetAllFilesResponse, GetFileResponse, GetPlatformResponse } from "../interfaces/fileInterfaces";
+import { FileInfo, FileError, GetAllFilesResponse, GetPlatformResponse, GetFileApiResponse } from "../interfaces/fileInterfaces";
 
-export const getAllFiles = async (dirPath: string): Promise<DirectoryItem[]> => {
-  const response = await api.get<GetAllFilesResponse>("/files", {
-    params: { path: dirPath },
+export async function getAllFiles(path: string): Promise<GetAllFilesResponse> {
+  const { data } = await api.get<GetAllFilesResponse | FileError>("/files", {
+    params: { path },
   });
-  return response.data.contents;
-};
 
-export const getFile = async (fileName: string): Promise<FileInfo> => {
-  const response = await api.get<GetFileResponse>("/file", {
+  if (data.type === "error") {
+    throw new Error(data.error ?? "Unknown server error");
+  }
+
+  return data;
+}
+
+export async function getFile(fileName: string): Promise<FileInfo> {
+  const response = await api.get<GetFileApiResponse>("/file", {
     params: { path: fileName },
   });
-  return response.data.details;
-};
+
+  const data = response.data;
+  if (data.type === "error") {
+    // Throw instead of returning the error object
+    // so that the caller's catch block is triggered
+    throw new Error(data.error ?? "Unknown server error");
+  }
+
+  // If we get here, data.type === "success"
+  return data.details;
+}
 
 export const getPlatform = async (): Promise<string> => {
   const response = await api.get<GetPlatformResponse>("/platform");

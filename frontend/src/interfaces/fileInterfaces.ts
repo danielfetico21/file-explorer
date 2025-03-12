@@ -5,16 +5,14 @@ export interface FileInfo {
     permissions: string;
     createdAt: Date;
     modifiedAt: Date;
+    error?: string
+    details?: string
 }
 
-export interface DirectoryItem {
-    name: string
-    type: 'file' | 'directory'
-    size?: number | null
-    modifiedAt: Date
-    createdAt: Date
-    error?: string
-    details?: FileInfo
+export interface FileError {
+    type: "error";
+    error: string;
+    details?: string;
 }
 
 
@@ -24,11 +22,11 @@ export interface PlatformInfo {
 
 export interface GetAllFilesResponse {
     type: "success";
-    contents: DirectoryItem[];
+    contents: FileInfo[];
 }
 
 export interface GetFileResponse {
-    type: "success";
+    type: "success"
     details: FileInfo;
 }
 
@@ -36,3 +34,7 @@ export interface GetPlatformResponse {
     type: "success";
     platform: string;
 }
+
+
+export type GetFilesApiResponse = GetAllFilesResponse | FileError;
+export type GetFileApiResponse = GetFileResponse | FileError;

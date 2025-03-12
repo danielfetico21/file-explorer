@@ -1,12 +1,12 @@
 import React from "react";
-import { DirectoryItem, FileInfo } from "../../interfaces/fileInterfaces";
+import { FileInfo } from "../../interfaces/fileInterfaces";
 import { cn } from "../../utils/cn";
 import FileIcon from "../FileIcon";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import FileDetails from "./FileDetails";
 
 interface FileItemProps {
-  file: DirectoryItem;
+  file: FileInfo;
   isDetailsExpanded: boolean;
   isFileLoading: boolean;
   selectedFile: FileInfo | null;

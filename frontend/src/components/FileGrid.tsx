@@ -1,5 +1,5 @@
 import React from "react";
-import { DirectoryItem } from "../interfaces/fileInterfaces";
+import { FileInfo } from "../interfaces/fileInterfaces";
 import { useSelector, useDispatch } from "react-redux";
 import { selectFile, toggleFileExpansion } from "../store/fileSlice";
 import { RootState } from "../store/store";
@@ -8,9 +8,10 @@ import LoadingFilesSkeleton from "./SmallComponents/LoadingFilesSkeleton";
 import EmptyState from "./SmallComponents/EmptyState";
 import FileItem from "./SmallComponents/FileItem";
 import FileHeader from "./SmallComponents/FileHeader";
+import FileError from "./SmallComponents/FIleError";
 
 interface FileGridProps {
-  onFileClick: (file: DirectoryItem) => void;
+  onFileClick: (file: FileInfo) => void;
   onBackClick: () => void;
 }
 
@@ -23,6 +24,7 @@ const FileGrid: React.FC<FileGridProps> = ({ onFileClick, onBackClick }) => {
     expandedFilePaths,
     fileDetails,
     isLoading,
+    globalError,
     loadingFileId,
   } = useSelector((state: RootState) => state.files);
 
@@ -32,7 +34,7 @@ const FileGrid: React.FC<FileGridProps> = ({ onFileClick, onBackClick }) => {
     return currentPath === "/" ? fileName : `${currentPath}/${fileName}`;
   };
 
-  const handleFileClick = (file: DirectoryItem) => {
+  const handleFileClick = (file: FileInfo) => {
     const fullPath = getFullPath(file.name);
 
     dispatch(selectFile(fullPath));
@@ -51,10 +53,12 @@ const FileGrid: React.FC<FileGridProps> = ({ onFileClick, onBackClick }) => {
 
           {isLoading && !loadingFileId ? (
             <LoadingFilesSkeleton />
+          ) : globalError ? (
+            <FileError fileError={globalError} />
           ) : !files || files.length === 0 ? (
             <EmptyState />
           ) : (
-            files.map((file: DirectoryItem) => {
+            files.map((file) => {
               const fullPath = getFullPath(file.name);
               return (
                 <FileItem
