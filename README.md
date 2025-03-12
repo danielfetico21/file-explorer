@@ -36,13 +36,13 @@ docker-compose up -d
 
 Once built:
 
-* **Backend:** Accessible at [http://localhost:3000](http://localhost:3000/)
-* **Frontend:** Accessible at [http://localhost:](http://localhost:3000/)8080
+* **Backend:** Accessible at http://localhost:3000
+* **Frontend:** Accessible at http://localhost:8080
 
 ### Manual Setup
 
-* **Backend** : See [backend/README.md](https://chatgpt.com/c/backend/README.md) for detailed instructions.
-* **Frontend** : See [frontend/README.md](https://chatgpt.com/c/frontend/README.md) for details (currently a placeholder).
+* **Backend** : See backend/README.md for detailed instructions.
+* **Frontend** : See frontend/README.md for details (currently a placeholder).
 
 ---
 
