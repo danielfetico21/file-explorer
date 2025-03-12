@@ -1,0 +1,18 @@
+# frontend/Dockerfile
+FROM node:23-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+# If you're using React/Vite/Next:
+RUN npm run build
+
+# If you just want to serve it on port 8080:
+EXPOSE 8080
+
+# Example: if you use Vite's preview or "serve" 
+CMD ["npx", "serve", "-s", "dist", "-l", "8080"]

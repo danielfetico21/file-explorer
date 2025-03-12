@@ -1,0 +1,22 @@
+
+# Use an official Node.js runtime
+FROM node:23-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package files from the build context (which is already ./backend)
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the backend source code
+COPY . .
+
+# Build your backend (if you have a build step, e.g. TypeScript)
+RUN npm run build
+
+# Expose the port your backend listens on
+EXPOSE 3000
+
+# Start command (assuming you have "start:backend" in package.json)
+CMD ["npm", "run", "start:backend"]
