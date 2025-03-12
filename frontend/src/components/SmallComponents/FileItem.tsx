@@ -2,7 +2,6 @@ import React from "react";
 import { FileInfo } from "../../interfaces/fileInterfaces";
 import { cn } from "../../utils/cn";
 import FileIcon from "../FileIcon";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import FileDetails from "./FileDetails";
 
 interface FileItemProps {
@@ -20,8 +19,7 @@ const FileItem: React.FC<FileItemProps> = ({
   selectedFile,
   onClick,
 }) => {
-  const shouldShowExpanded =
-    isDetailsExpanded && selectedFile && !isFileLoading;
+  const shouldShowExpanded = isDetailsExpanded && !isFileLoading;
 
   return (
     <div className="relative">
@@ -54,13 +52,6 @@ const FileItem: React.FC<FileItemProps> = ({
               {(file.size / 1024).toFixed(1)} KB
             </span>
           )}
-          {selectedFile &&
-            !isFileLoading &&
-            (isDetailsExpanded ? (
-              <ChevronUp className="w-4 h-4 text-gray-400" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-gray-400" />
-            ))}
         </button>
 
         {shouldShowExpanded && selectedFile && (

@@ -37,8 +37,15 @@ const FileGrid: React.FC<FileGridProps> = ({ onFileClick, onBackClick }) => {
   const handleFileClick = (file: FileInfo) => {
     const fullPath = getFullPath(file.name);
 
-    dispatch(selectFile(fullPath));
-    dispatch(toggleFileExpansion(fullPath));
+    if (selectedFilePath === fullPath) {
+      dispatch(toggleFileExpansion(fullPath));
+    } else {
+      dispatch(selectFile(fullPath));
+
+      if (file.type === "file") {
+        dispatch(toggleFileExpansion(fullPath));
+      }
+    }
 
     onFileClick(file);
   };
