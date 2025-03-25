@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getPlatform } from "../../api/api";
-import LinuxIcon from "../assets/icons/linux.png";
-import MacIcon from "../assets/icons/mac.png";
-import WinIcon from "../assets/icons/windows.png";
+import LinuxIcon from "../../assets/icons/linux.png";
+import MacIcon from "../../assets/icons/mac.png";
+import WinIcon from "../../assets/icons/windows.png";
 import { storage } from "../../utils/storage";
 
 const PLATFORM_KEY = "platform";

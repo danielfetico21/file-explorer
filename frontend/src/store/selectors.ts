@@ -23,3 +23,7 @@ export const selectSelectedFilePath = (state: RootState) =>
   state.files.selectedFilePath;
 export const selectLoadingFileId = (state: RootState) =>
   state.files.loadingFileId;
+export const selectFileDetailsByPath = (path: string) => (state: RootState) =>
+  state.files.fileDetails[path];
+export const selectIsLoadingFile = (fileId: string) => (state: RootState) =>
+  state.files.loadingFileId === fileId;

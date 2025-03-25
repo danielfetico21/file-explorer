@@ -15,3 +15,11 @@ export const buildFullPath = (
 ): string => {
   return currentPath === "/" ? `/${itemName}` : `${currentPath}/${itemName}`;
 };
+
+/**
+ * Extrage numele fișierului dintr-un path complet.
+ * Exemplu: "/folder/subfolder/README.md" => "README.md"
+ */
+export function getFileNameFromPath(path: string): string {
+  return path.split("/").filter(Boolean).pop() || "";
+}

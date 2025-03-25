@@ -5,9 +5,8 @@ import {
   setCurrentPath,
   setFileDetails,
   setGlobalError,
-  setLoadingState,
 } from "../store/fileSlice";
-import { getFile } from "../api/api";
+import { fetchFileDetails } from "../store/fileThunks";
 import { buildFullPath } from "../utils/path";
 import handleError from "../utils/error";
 import { ensureMinimumDuration } from "../utils/timers";
@@ -17,9 +16,11 @@ import {
   selectLoadingFileId,
   selectSelectedFilePath,
 } from "../store/selectors";
+import type { AppDispatch } from "../store/store";
+import { isRejected } from "@reduxjs/toolkit";
 
 export const useExplorerController = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const currentPath = useSelector(selectCurrentPath);
   const selectedFilePath = useSelector(selectSelectedFilePath);
   const loadingFileId = useSelector(selectLoadingFileId);
@@ -33,18 +34,24 @@ export const useExplorerController = () => {
   );
 
   const handleFileClick = useCallback(
-    async (item: FileInfo, fullPath: string) => {
+    async (fullPath: string) => {
       if (selectedFilePath === fullPath && !loadingFileId) return;
 
       dispatch(selectFile(fullPath));
-      dispatch(setLoadingState({ isLoading: true, fileId: item.name }));
 
       try {
         const startTime = Date.now();
-        const fileDetails = await getFile(fullPath);
+        const result = await dispatch(fetchFileDetails(fullPath));
+
         await ensureMinimumDuration(startTime);
 
-        dispatch(setFileDetails({ path: fullPath, details: fileDetails }));
+        if (isRejected(result)) {
+          throw new Error(result.payload || "Failed to fetch file");
+        }
+
+        const { path, details } = result.payload;
+
+        dispatch(setFileDetails({ path, details }));
         dispatch(setGlobalError(null));
       } catch (error) {
         const fileError = handleError(error);
@@ -55,8 +62,6 @@ export const useExplorerController = () => {
             details: fileError?.details,
           })
         );
-      } finally {
-        dispatch(setLoadingState({ isLoading: false, fileId: null }));
       }
     },
     [dispatch, selectedFilePath, loadingFileId]
@@ -66,7 +71,7 @@ export const useExplorerController = () => {
     async (item: FileInfo) => {
       const fullPath = buildFullPath(currentPath, item.name);
       if (item.type === "file") {
-        await handleFileClick(item, fullPath);
+        await handleFileClick(fullPath);
       } else {
         handleDirectoryClick(fullPath);
       }

@@ -1,14 +1,14 @@
-import csvIcon from "../assets/icons/csv.png";
-import docxIcon from "../assets/icons/docx.png";
-import exeIcon from "../assets/icons/exe.png";
-import fileIcon from "../assets/icons/file.png";
-import folderIcon from "../assets/icons/folder.png";
-import imageIcon from "../assets/icons/image.png";
-import jsonIcon from "../assets/icons/json.png";
-import pdfIcon from "../assets/icons/pdf.png";
-import rarIcon from "../assets/icons/rar.png";
-import txtIcon from "../assets/icons/txt.png";
-import zipIcon from "../assets/icons/zip.png";
+import csvIcon from "../../assets/icons/csv.png";
+import docxIcon from "../../assets/icons/docx.png";
+import exeIcon from "../../assets/icons/exe.png";
+import fileIcon from "../../assets/icons/file.png";
+import folderIcon from "../../assets/icons/folder.png";
+import imageIcon from "../../assets/icons/image.png";
+import jsonIcon from "../../assets/icons/json.png";
+import pdfIcon from "../../assets/icons/pdf.png";
+import rarIcon from "../../assets/icons/rar.png";
+import txtIcon from "../../assets/icons/txt.png";
+import zipIcon from "../../assets/icons/zip.png";
 
 const iconMap: Record<string, string> = {
   csv: csvIcon,
