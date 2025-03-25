@@ -3,7 +3,7 @@ import FileExplorer from "./components/FileExplorer";
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center w-full p-6">
+    <div className="bg-gray-950 flex flex-col items-center justify-center w-full py-12">
       <FileExplorer />
     </div>
   );

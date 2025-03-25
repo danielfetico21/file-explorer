@@ -19,6 +19,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -76,4 +82,21 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Scrollbar vertical și orizontal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  /* Adaugă asta pentru orizontal */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+/* Track-ul (opțional, doar dacă vrei ceva subtil) */
+::-webkit-scrollbar-track {
+  background: transparent;
 }
