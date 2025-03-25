@@ -1,13 +1,58 @@
-# Frontend
+# File Explorer Frontend
 
-A React-based frontend application for our file explorer. This README describes how to install dependencies, run the development server, build for production, and run in Docker.
+A modern React application for browsing and managing files, built with TypeScript and Redux Toolkit.
+
+## Features
+
+- 🎨 **Modern UI Components**: Clean and responsive design
+- 🔄 **State Management**: Efficient Redux implementation with Redux Toolkit
+- 🎯 **Type Safety**: Full TypeScript support
+- 🚀 **Performance**: Optimized rendering and file loading
+- ⌨️ **Keyboard Navigation**: Full keyboard support
+- 📱 **Responsive Design**: Works on all screen sizes
+
+## Tech Stack
+
+- **Framework**: React 19
+- **Language**: TypeScript
+- **State Management**: Redux Toolkit
+- **Styling**: Tailwind CSS
+- **Build Tool**: Vite
+- **Package Manager**: npm/yarn
+
+## Project Structure
+
+```
+frontend/
+├── src/
+│   ├── components/          # React components
+│   │   ├── fileExplorer/   # File explorer specific components
+│   │   │   ├── FileGrid.tsx
+│   │   │   ├── FileList.tsx
+│   │   │   └── ...
+│   │   ├── shared/        # Reusable components
+│   │   │   ├── BackButton.tsx
+│   │   │   ├── Breadcrumbs.tsx
+│   │   │   └── ...
+│   │   └── common/        # UI components
+│   ├── hooks/             # Custom React hooks
+│   │   ├── useExplorerController.ts
+│   │   ├── useFetchDirectory.ts
+│   │   └── ...
+│   ├── store/             # Redux store
+│   │   ├── fileSlice.ts
+│   │   ├── fileThunks.ts
+│   │   └── ...
+│   ├── utils/             # Utility functions
+│   └── interfaces/        # TypeScript types
+├── public/                # Static assets
+└── package.json          # Dependencies and scripts
+```
 
 ## Prerequisites
 
-- **Node.js** (v16 or higher recommended)
-- **npm** or **yarn**
-
-*(If you’re only running via Docker, you don’t strictly need Node installed locally.)*
+- Node.js (v16 or higher)
+- npm or yarn
 
 ## Installation
 
@@ -16,90 +61,86 @@ A React-based frontend application for our file explorer. This README describes 
    ```bash
    cd frontend
    ```
-2. **Install** the dependencies:
+2. **Install** dependencies:
 
    ```bash
    npm install
-   ```
-
-   or
-
-   ```bash
+   # or
    yarn
    ```
-3. Make sure you set any **environment variables** if needed (e.g., `VITE_API_URL`).
+3. **Environment Setup**:
+   Create a `.env` file in the frontend directory:
+
+   ```
+   VITE_API_URL=http://localhost:3000
+   ```
 
 ## Development
 
-- **Start** the dev server (with hot reload):
+Start the development server:
 
-  ```bash
-  npm run dev
-  ```
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-  or
-
-  ```bash
-  yarn dev
-  ```
-- Open the link shown in your terminal—often [http://localhost:5173](http://localhost:5173)—in your browser.
+The application will be available at http://localhost:5173
 
 ## Production Build
 
-1. **Build** the production bundle:
+1. **Build** the application:
 
    ```bash
    npm run build
+   # or
+   yarn build
    ```
-2. **Serve** the production files locally (optional):
+2. **Preview** the production build:
 
    ```bash
-   npm install -g serve
-   serve -s dist
+   npm run preview
+   # or
+   yarn preview
    ```
-
-   Then open [http://localhost:5000](http://localhost:5000).
 
 ## Docker
 
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-EXPOSE 5000
-CMD ["npx", "serve", "-s", "dist", "-l", "5000"]
-```
-
-### Build & Run
+Build and run using Docker:
 
 ```bash
+# Build
 docker build -t file-explorer-frontend .
-docker run -p 5000:5000 file-explorer-frontend
+
+# Run
+docker run -p 5173:5173 file-explorer-frontend
 ```
 
-Open [http://localhost:5000](http://localhost:5000).
+## Available Scripts
 
-## Folder Structure
-
-```
-frontend/
-  ├── public/
-  ├── src/
-  ├── package.json
-  ├── tsconfig.json
-  ├── Dockerfile
-  └── ...
-```
-
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run type-check` - Run TypeScript type checking
 
 ## Keyboard Navigation
 
-> **Note:** You must press `<kbd>`Tab`</kbd>` to focus on the file grid before using these keys.
+> **Note:** Press Tab to focus the file grid before using these keys.
 
-- **ArrowDown**: Move the selection down
-- **ArrowUp**: Move the selection up
-- **Enter**: Open a directory or show file info
-- **Escape**: Go back
+- **ArrowDown**: Move selection down
+- **ArrowUp**: Move selection up
+- **Enter**: Open directory or show file info
+- **Escape**: Go back one level
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License.

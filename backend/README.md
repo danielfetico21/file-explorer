@@ -1,116 +1,198 @@
-
-
 # File Explorer Backend
 
+A robust Node.js backend service for file system operations, built with TypeScript and Express.
 
-This is the backend portion of the File Explorer Application. It is built with Node.js, TypeScript, and Express and provides the following REST API endpoints:
+## Features
 
-- **GET /api/files?path={path}**  
-  Lists the contents of a directory, returning details for each file or subdirectory.
+-   📁 **File System Operations**: Read directories and file details
+-   🔒 **Security**: Safe file system access with path validation
+-   🚀 **Performance**: Efficient file system operations
+-   📝 **Type Safety**: Full TypeScript support
+-   🛠️ **Error Handling**: Comprehensive error management
+-   🌐 **Cross-Platform**: Works on Windows, macOS, and Linux
 
-- **GET /api/file?path={path}**  
-  Retrieves detailed information (name, type, size, creation date, last modified date) about a single file or directory.
+## Tech Stack
 
-- **GET /api/platform**  
-  Returns the platform (Windows, MacOS, Linux) on which the server is running.
+-   **Runtime**: Node.js
+-   **Framework**: Express
+-   **Language**: TypeScript
+-   **Testing**: Jest
+-   **Package Manager**: npm/yarn
 
 ## Project Structure
 
+```
 backend/
 ├── src/
- │ ├── controllers/
- │  │ └── fileController.ts # Handles API requests and responses
- │ ├── constants/
- │  │ └── error.ts # Contains error message constants
- │ ├── interfaces/
- │  │ └── interface.ts # TypeScript interfaces (e.g., DirectoryItem, FileInfo)
- │ ├── routes/
- │  │ └── fileRoutes.ts # Maps API endpoints to controllers
- │ ├── services/
- │  │ └── fileService.ts # Business logic for file system operations
- │ └── index.ts # Application entry point
-├── Dockerfile # Dockerfile to build and run the backend service
-├── package.json # npm configuration and scripts
-└── tsconfig.json # TypeScript configuration
-
-
-
-2. **Install dependencies:**
-   bash
-
-   Copy
-
-   ```
-   npm install
-   ```
-3. **Build the project (transpile TypeScript to JavaScript):**
-   bash
-
-   Copy
-
-   ```
-   npm run build
-   ```
-4. **Start the server:**
-   bash
-
-   Copy
-
-   ```
-   npm run start:backend
-   ```
-
-   The server will start on port 3000 by default.
-
-### Development Mode
-
-For automatic reloading during development, you can use nodemon:
-
-bash
-
-Copy
-
-```
-npm run dev:backend
+│   ├── controllers/     # Request handlers
+│   │   └── fileController.ts
+│   ├── services/        # Business logic
+│   │   └── fileService.ts
+│   ├── routes/          # API routes
+│   │   └── fileRoutes.ts
+│   ├── interfaces/      # TypeScript types
+│   │   └── fileInterfaces.ts
+│   ├── constants/       # Constants and error messages
+│   │   └── error.ts
+│   └── index.ts         # Application entry point
+├── tests/               # Test files
+├── package.json         # Dependencies and scripts
+└── tsconfig.json        # TypeScript configuration
 ```
 
-### Running with Docker
+## API Endpoints
 
-To run the backend using Docker:
+### List Directory Contents
 
-1. **Build the Docker image:**
-   bash
+```http
+GET /api/files?path={directory-path}
+```
 
-   Copy
+**Response:**
 
-   ```
-   docker build -t backend-app .
-   ```
-2. **Run the Docker container:**
-   bash
+```json
+{
+    "contents": [
+        {
+            "name": "example.txt",
+            "type": "file",
+            "size": 1024,
+            "createdAt": "2024-03-25T12:00:00Z",
+            "modifiedAt": "2024-03-25T12:00:00Z"
+        }
+    ]
+}
+```
 
-   Copy
+### Get File Details
 
-   ```
-   docker run -d -p 3000:3000 backend-app
-   ```
+```http
+GET /api/file?path={file-path}
+```
 
-> **Note:** Without volume mounts, the container only has access to its own filesystem. To navigate host files, mount the appropriate host directories.
+**Response:**
 
-## API Documentation
+```json
+{
+    "name": "example.txt",
+    "type": "file",
+    "size": 1024,
+    "createdAt": "2024-03-25T12:00:00Z",
+    "modifiedAt": "2024-03-25T12:00:00Z"
+}
+```
 
-### API Endpoints
+### Get Platform Information
 
-* **List Directory Contents:**
-  `GET /api/files?path={directory-path}`
-* **Get File/Directory Details:**
-  `GET /api/file?path={file-or-directory-path}`
-* **Get Platform Information:**
-  `GET /api/platform`
+```http
+GET /api/platform
+```
+
+**Response:**
+
+```json
+{
+    "platform": "darwin",
+    "platformName": "macOS"
+}
+```
+
+## Prerequisites
+
+-   Node.js (v16 or higher)
+-   npm or yarn
+
+## Installation
+
+1. **Navigate** to the backend folder:
+
+    ```bash
+    cd backend
+    ```
+
+2. **Install** dependencies:
+
+    ```bash
+    npm install
+    # or
+    yarn
+    ```
+
+3. **Build** the project:
+    ```bash
+    npm run build
+    # or
+    yarn build
+    ```
+
+## Development
+
+Start the development server with hot reload:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+The server will start on http://localhost:3000
+
+## Production
+
+Start the production server:
+
+```bash
+npm start
+# or
+yarn start
+```
+
+## Docker
+
+Build and run using Docker:
+
+```bash
+# Build
+docker build -t file-explorer-backend .
+
+# Run
+docker run -p 3000:3000 file-explorer-backend
+```
+
+## Available Scripts
+
+-   `npm run dev` - Start development server with hot reload
+-   `npm run build` - Build the project
+-   `npm start` - Start production server
+-   `npm test` - Run tests
+-   `npm run lint` - Run ESLint
+-   `npm run type-check` - Run TypeScript type checking
 
 ## Error Handling
 
-Error messages are centralized in `src/constants/error.ts` for consistency.
+The API uses standardized error responses:
+
+```json
+{
+    "error": "Error message",
+    "details": "Additional error details"
+}
+```
+
+Common error codes:
+
+-   400: Bad Request
+-   404: File/Directory not found
+-   403: Access denied
+-   500: Internal server error
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
 ## License
 

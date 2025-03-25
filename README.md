@@ -1,56 +1,88 @@
-
 # File Explorer Application
 
-This repository contains a **File Explorer Application** split into two major parts:
+A modern file explorer application built with React and Node.js, featuring a clean UI and efficient file system navigation.
 
-- **Backend**: A REST API (Node.js, TypeScript, Express) for navigating the file system.
-- **Frontend**: A client application React that displays file and directory details by consuming the backend API.
+## Features
 
----
+- 🗂️ **File System Navigation**: Browse directories and files with a modern interface
+- 🔍 **File Details**: View detailed information about files and directories
+- ⌨️ **Keyboard Navigation**: Full keyboard support for efficient navigation
+- 🎨 **Modern UI**: Clean and responsive design
+- 🔄 **Real-time Updates**: Instant feedback on file system changes
+- 🚀 **Performance Optimized**: Efficient file loading and caching
 
 ## Repository Structure
 
+```
 file-explorer/
-
-├── backend/               # Backend API code
-
-│   └── README.md          # Backend documentation
-
-├── frontend/              # Frontend application (currently a placeholder)
-
-│   └── README.md          # Frontend documentation
-
-├── docker-compose.yml      # Docker Compose file to run backend & frontend
-
-└── README.md              # This file (main repo documentation)
+├── backend/               # Backend API (Node.js, TypeScript, Express)
+│   ├── src/              # Source code
+│   │   ├── controllers/  # Request handlers
+│   │   ├── services/     # Business logic
+│   │   ├── routes/       # API routes
+│   │   └── interfaces/   # TypeScript types
+│   └── README.md         # Backend documentation
+├── frontend/             # Frontend application (React + TypeScript)
+│   ├── src/             # Source code
+│   │   ├── components/  # React components
+│   │   │   ├── fileExplorer/  # File explorer specific components
+│   │   │   ├── shared/       # Reusable components
+│   │   │   └── common/       # UI components
+│   │   ├── hooks/      # Custom React hooks
+│   │   ├── store/      # Redux store and slices
+│   │   └── utils/      # Utility functions
+│   └── README.md       # Frontend documentation
+├── docker-compose.yml   # Docker Compose configuration
+└── README.md           # This file
+```
 
 ## Getting Started
 
 ### Using Docker Compose
 
-A `docker-compose.yml` file is provided to build and run both services. At present, it runs the **backend** and includes a placeholder for the **frontend**:
+The easiest way to run the application is using Docker Compose:
 
 ```bash
 docker-compose up -d
 ```
 
-Once built:
+This will start:
 
-* **Backend:** Accessible at http://localhost:3000
-* **Frontend:** Accessible at http://localhost:8080
+- **Backend:** http://localhost:3000
+- **Frontend:** http://localhost:8080
 
 ### Manual Setup
 
-* **Backend** : See backend/README.md for detailed instructions.
-* **Frontend** : See frontend/README.md for details (currently a placeholder).
+1. **Backend Setup:**
 
----
+   ```bash
+   cd backend
+   npm install
+   npm run dev
+   ```
+2. **Frontend Setup:**
+
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
 ## Keyboard Navigation
 
-> **Note** : You must press Tab to focus the file grid before using these keys.
+- **ArrowDown**: Move selection down
+- **ArrowUp**: Move selection up
+- **Enter**: Open directory or show file info
+- **Escape**: Go back one level
 
-* **ArrowDown** : Move selection down
-* **ArrowUp** : Move selection up
-* **Enter** : Open a directory or show file info
-* **Escape** : Go back one level
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
