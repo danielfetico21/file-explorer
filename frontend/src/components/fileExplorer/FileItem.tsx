@@ -1,7 +1,7 @@
 import React from "react";
 import { FileInfo } from "../../interfaces/fileInterfaces";
 import { cn } from "../../utils/cn";
-import FileIcon from "../FileIcon";
+import FileIcon from "./FileIcon";
 import FileDetails from "./FileDetails";
 
 interface FileItemProps {

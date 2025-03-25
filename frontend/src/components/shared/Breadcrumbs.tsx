@@ -1,7 +1,7 @@
 import { Home } from "lucide-react";
 import React, { useEffect, useRef } from "react";
-import { useBreadcrumbController } from "../hooks/useBreadcrumbController";
-import BreadcrumbItem from "./SmallComponents/BreadcrumbItem";
+import { useBreadcrumbController } from "../../hooks/useBreadcrumbController";
+import BreadcrumbItem from "./BreadcrumbItem";
 
 const Breadcrumbs: React.FC = () => {
   const { parts, handleClick } = useBreadcrumbController();

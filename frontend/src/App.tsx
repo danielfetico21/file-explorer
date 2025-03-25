@@ -1,5 +1,5 @@
 import "./App.css";
-import FileExplorer from "./components/FileExplorer";
+import FileExplorer from "./components/fileExplorer/FileExplorer";
 
 const App = () => {
   return (

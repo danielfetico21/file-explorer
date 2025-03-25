@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import { FileInfo } from "../interfaces/fileInterfaces";
+import { FileInfo } from "../../interfaces/fileInterfaces";
 import { useSelector, useDispatch } from "react-redux";
-import { selectFile, toggleFileExpansion } from "../store/fileSlice";
-import BackButton from "./SmallComponents/BackButton";
-import EmptyState from "./SmallComponents/EmptyState";
-import FileHeader from "./SmallComponents/FileHeader";
-import FileError from "./SmallComponents/FileError";
-import { getFullPath } from "../utils/path";
-import { scrollIntoViewIfNeeded } from "../utils/dom";
-import { useKeyboardNavigation } from "../hooks/useKeyboardNavigation";
-import { selectFilesState } from "../store/selectors";
+import { selectFile, toggleFileExpansion } from "../../store/fileSlice";
+import { getFullPath } from "../../utils/path";
+import { scrollIntoViewIfNeeded } from "../../utils/dom";
+import { useKeyboardNavigation } from "../../hooks/useKeyboardNavigation";
+import { selectFilesState } from "../../store/selectors";
+import FileError from "./FileError";
+import FileHeader from "./FileHeader";
+import EmptyState from "../shared/EmptyState";
+import BackButton from "../shared/BackButton";
 import FileList from "./FileList";
 
 interface FileGridProps {

@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
-import FileGrid from "./FileGrid";
-import Breadcrumbs from "./Breadcrumbs";
+import { useFetchDirectory } from "../../hooks/useFetchDirectory";
+import { useExplorerController } from "../../hooks/useExplorerController";
 import FileTitle from "./FileTitle";
-import { useFetchDirectory } from "../hooks/useFetchDirectory";
-import { useExplorerController } from "../hooks/useExplorerController";
+import FileGrid from "./FileGrid";
+import Breadcrumbs from "../shared/Breadcrumbs";
 
 const FileExplorer: React.FC = () => {
   const { currentPath, handleItemClick, handleBackClick } =

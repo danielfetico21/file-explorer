@@ -1,7 +1,7 @@
 import React from "react";
-import { FileInfo } from "../interfaces/fileInterfaces";
-import FileItem from "./SmallComponents/FileItem";
-import { getFullPath } from "../utils/path";
+import { FileInfo } from "../../interfaces/fileInterfaces";
+import { getFullPath } from "../../utils/path";
+import FileItem from "./FileItem";
 
 interface FileListProps {
   files: FileInfo[];
